@@ -1,0 +1,64 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Backend",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "start"
+            ],
+            "cwd": "${workspaceFolder}/backend",
+            "restart": true,
+            "console": "integratedTerminal",
+            "protocol": "inspector",
+            "internalConsoleOptions": "neverOpen",
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Admin",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "dev"
+            ],
+            "cwd": "${workspaceFolder}/admin",
+            "restart": true,
+            "console": "integratedTerminal",
+            "protocol": "inspector",
+            "internalConsoleOptions": "neverOpen",
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Frontend",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "dev"
+            ],
+            "cwd": "${workspaceFolder}/frontend",
+            "restart": true,
+            "console": "integratedTerminal",
+            "protocol": "inspector",
+            "internalConsoleOptions": "neverOpen",
+            "skipFiles": [
+                "<node_internals>/**"
+            ]
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Launch All",
+            "configurations": ["Launch Backend", "Launch Admin", "Launch Frontend"]
+        }
+    ]
+}
