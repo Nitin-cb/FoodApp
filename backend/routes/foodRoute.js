@@ -3,6 +3,8 @@ import {
   addFood,
   listFood,
   removeFood,
+  getFood,
+  editFood,
 } from '../controllers/foodController.js';
 import multer from 'multer';
 const foodRouter = express.Router();
@@ -45,8 +47,29 @@ const handleUpload = (req, res, next) => {
   });
 };
 
+// Middleware to make file upload optional for edit route
+const handleOptionalUpload = (req, res, next) => {
+  upload.single('image')(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      return res.status(400).json({
+        success: false,
+        message: `Upload error: ${err.message}`,
+      });
+    } else if (err) {
+      return res.status(400).json({
+        success: false,
+        message: err.message,
+      });
+    }
+    // Continue even if no file was uploaded
+    next();
+  });
+};
+
 foodRouter.get('/list', listFood);
+foodRouter.get('/:id', getFood);
 foodRouter.post('/add', handleUpload, addFood);
+foodRouter.put('/edit/:id', handleOptionalUpload, editFood);
 foodRouter.post('/remove', removeFood);
 
 export default foodRouter;
