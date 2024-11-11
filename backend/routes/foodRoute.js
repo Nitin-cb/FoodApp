@@ -1,21 +1,52 @@
 import express from 'express';
-import { addFood, listFood, removeFood } from '../controllers/foodController.js';
+import {
+  addFood,
+  listFood,
+  removeFood,
+} from '../controllers/foodController.js';
 import multer from 'multer';
 const foodRouter = express.Router();
 
-//Image Storage Engine (Saving Image to uploads folder & rename it)
+// Configure multer to use memory storage instead of disk storage
+const storage = multer.memoryStorage();
 
-const storage = multer.diskStorage({
-    destination: 'uploads',
-    filename: (req, file, cb) => {
-        return cb(null,`${Date.now()}${file.originalname}`);
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit
+  },
+  fileFilter: function (req, file, cb) {
+    // Accept images only
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+      return cb(new Error('Only image files are allowed!'), false);
     }
-})
+    cb(null, true);
+  },
+});
 
-const upload = multer({ storage: storage})
+// Middleware to handle file upload errors
+const handleUpload = (req, res, next) => {
+  upload.single('image')(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      // A Multer error occurred when uploading
+      return res.status(400).json({
+        success: false,
+        message: `Upload error: ${err.message}`,
+      });
+    } else if (err) {
+      // An unknown error occurred
+      return res.status(400).json({
+        success: false,
+        message: err.message,
+      });
+    }
+    // Everything went fine
+    next();
+  });
+};
 
-foodRouter.get("/list",listFood);
-foodRouter.post("/add",upload.single('image'),addFood);
-foodRouter.post("/remove",removeFood);
+foodRouter.get('/list', listFood);
+foodRouter.post('/add', handleUpload, addFood);
+foodRouter.post('/remove', removeFood);
 
 export default foodRouter;

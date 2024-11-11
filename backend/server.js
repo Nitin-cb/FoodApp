@@ -3,10 +3,12 @@ import cors from 'cors';
 import { connectDB } from './config/db.js';
 import userRouter from './routes/userRoute.js';
 import foodRouter from './routes/foodRoute.js';
-import 'dotenv/config';
+import dotenv from 'dotenv';
+
 import cartRouter from './routes/cartRoute.js';
 import orderRouter from './routes/orderRoute.js';
 import vendorRouter from './routes/vendorRoute.js';
+dotenv.config();
 
 // app config
 const app = express();
