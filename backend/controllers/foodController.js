@@ -1,10 +1,11 @@
 import foodModel from '../models/foodModel.js';
 import cloudinary from '../config/cloudinary.js';
+import vendorModel from '../models/vendorModel.js';
 
 // all food list
 const listFood = async (req, res) => {
   try {
-    const foods = await foodModel.find({});
+    const foods = await foodModel.find({}).populate('vendor', 'shopName'); // Populate the vendor field
     res.json({ success: true, data: foods });
   } catch (error) {
     console.log(error);
@@ -15,7 +16,9 @@ const listFood = async (req, res) => {
 // Get single food item
 const getFood = async (req, res) => {
   try {
-    const food = await foodModel.findById(req.params.id);
+    const food = await foodModel
+      .findById(req.params.id)
+      .populate('vendor', 'shopName'); // Populate the vendor field
     if (!food) {
       return res.status(404).json({
         success: false,
@@ -51,11 +54,14 @@ const addFood = async (req, res) => {
       crop: 'scale',
     });
 
+    //Added quantity
     const food = new foodModel({
       name: req.body.name,
       description: req.body.description,
       price: req.body.price,
+      quantity: req.body.quantity, // New quantity field
       category: req.body.category,
+      vendor: req.body.vendor, // New vendor field
       image: {
         public_id: result.public_id,
         url: result.secure_url,
@@ -76,7 +82,9 @@ const addFood = async (req, res) => {
 // Edit food
 const editFood = async (req, res) => {
   try {
-    const food = await foodModel.findById(req.params.id);
+    const food = await foodModel
+      .findById(req.params.id)
+      .populate('vendor', 'shopName'); // Populate the vendor field
     if (!food) {
       return res.status(404).json({
         success: false,
@@ -114,7 +122,9 @@ const editFood = async (req, res) => {
         name: req.body.name || food.name,
         description: req.body.description || food.description,
         price: req.body.price || food.price,
+        quantity: req.body.quantity || food.quantity, // New quantity field
         category: req.body.category || food.category,
+        vendor: req.body.vendor || food.vendor, // New vendor field
         image: imageData,
       },
       { new: true } // Return updated document
@@ -152,4 +162,15 @@ const removeFood = async (req, res) => {
   }
 };
 
-export { listFood, addFood, removeFood, getFood, editFood };
+// Get list of vendors
+const getVendors = async (req, res) => {
+  try {
+    const vendors = await vendorModel.find({}, 'shopName');
+    res.json({ success: true, data: vendors });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: 'Error fetching vendors' });
+  }
+};
+
+export { listFood, addFood, removeFood, getFood, editFood, getVendors };

@@ -5,6 +5,7 @@ import {
   removeFood,
   getFood,
   editFood,
+  getVendors,
 } from '../controllers/foodController.js';
 import multer from 'multer';
 const foodRouter = express.Router();
@@ -71,5 +72,6 @@ foodRouter.get('/:id', getFood);
 foodRouter.post('/add', handleUpload, addFood);
 foodRouter.put('/edit/:id', handleOptionalUpload, editFood);
 foodRouter.post('/remove', removeFood);
+foodRouter.get('/vendors', getVendors); // New route to get list of vendors
 
 export default foodRouter;
