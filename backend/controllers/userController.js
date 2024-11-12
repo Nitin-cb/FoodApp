@@ -65,4 +65,34 @@ const registerUser = async (req,res) => {
     }
 }
 
-export {loginUser, registerUser}
+const addAddress =async (req,res)=>{
+    const {address}=req.body
+
+    try {
+        if(!address){
+           return res.json({success:false,message: "Please enter an address"})
+        }
+    
+        const user=await userModel.findById(req.body.userId)
+        if(!user){
+            return res.json({success:false,message:"User not found"})
+        }
+    
+        const addressIndex= user.personalInfo.address.findIndex(addr=>addr.addressType===address.addressType)
+    
+        if(addressIndex>-1){
+            user.personalInfo.address[addressIndex]=address
+            
+        }
+        else{
+            user.personalInfo.address.push(address)
+        }
+        await user.save()
+        res.json({success:true,user})
+    } catch (error) {
+        res.json({success:false,message:error})
+    }
+}
+
+
+export {loginUser, registerUser,addAddress}
