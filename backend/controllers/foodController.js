@@ -54,6 +54,7 @@ const addFood = async (req, res) => {
       crop: 'scale',
     });
 
+    //Added quantity
     const food = new foodModel({
       name: req.body.name,
       description: req.body.description,
