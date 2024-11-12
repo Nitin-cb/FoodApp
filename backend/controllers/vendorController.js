@@ -33,6 +33,35 @@ const addVendor = async (req, res) => {
   }
 };
 
+// update vendor
+const updateVendor = async (req, res) => {
+  try {
+    const { id, shopName, name, address, phone, category } = req.body;
+
+    // Find the vendor by ID
+    const vendor = await vendorModel.findById(id);
+
+    if (!vendor) {
+      return res.json({ success: false, message: 'Vendor not found' });
+    }
+
+    // Update the vendor information
+    vendor.shopName = shopName;
+    vendor.name = name;
+    vendor.address = address;
+    vendor.phone = phone;
+    vendor.category = category;
+
+    // Save the updated vendor
+    await vendor.save();
+
+    res.json({ success: true, message: 'Vendor updated' });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: 'Error updating vendor' });
+  }
+};
+
 // delete vendor
 const removeVendor = async (req, res) => {
   try {
@@ -47,4 +76,4 @@ const removeVendor = async (req, res) => {
   }
 };
 
-export { listVendor, addVendor, removeVendor };
+export { listVendor, addVendor, removeVendor, updateVendor };
