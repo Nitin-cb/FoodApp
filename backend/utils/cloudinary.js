@@ -1,11 +1,9 @@
-// config/cloudinary.js
+// utils/cloudinary.js
 import { v2 as cloudinary } from 'cloudinary';
 import dotenv from 'dotenv';
 
-// Load environment variables
 dotenv.config();
 
-// Verify credentials are available
 if (
   !process.env.CLOUDINARY_CLOUD_NAME ||
   !process.env.CLOUDINARY_API_KEY ||
@@ -20,13 +18,18 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Test the connection
-cloudinary.api.ping((error, result) => {
-  if (error) {
-    console.error('Cloudinary connection failed:', error);
-  } else {
-    console.log('Cloudinary connected successfully');
-  }
-});
+export const uploadToCloudinary = async (filePath) => {
+  const result = await cloudinary.uploader.upload(filePath, {
+    folder: 'foods',
+    resource_type: 'image',
+    width: 1000,
+    crop: 'scale',
+  });
+  return result;
+};
+
+export const deleteFromCloudinary = async (public_id) => {
+  await cloudinary.uploader.destroy(public_id);
+};
 
 export default cloudinary;
