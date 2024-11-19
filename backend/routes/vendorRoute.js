@@ -3,6 +3,7 @@ import {
   addVendor,
   listVendor,
   removeVendor,
+  updateVendor,
 } from '../controllers/vendorController.js';
 // import multer from 'multer';
 const vendorRouter = express.Router();
@@ -19,6 +20,7 @@ const vendorRouter = express.Router();
 vendorRouter.get('/list', listVendor);
 // vendorRouter.post("/add",upload.single('image'),addVendor);
 vendorRouter.post('/add', addVendor);
+vendorRouter.post('/update', updateVendor);
 vendorRouter.post('/remove', removeVendor);
 
 export default vendorRouter;
