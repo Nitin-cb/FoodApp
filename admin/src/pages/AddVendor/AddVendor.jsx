@@ -18,14 +18,15 @@ const AddVendor = () => {
     const onSubmitHandler = async (event) => {
         event.preventDefault();
 
-        const formData = new FormData();
-        formData.append("shopName", data.shopName);
-        formData.append("name", data.name);
-        formData.append("address", data.address);
-        formData.append("phone", data.phone);
-        formData.append("category", data.category);
+        const vendorData={
+            shopName: data.shopName,
+            name: data.name,
+            address: data.address,
+            phone: data.phone,
+            category: data.category,
+        }
         
-        const response = await axios.post(`${url}/api/vendor/add`, formData);
+        const response = await axios.post(`${url}/api/vendor/add`, vendorData);
         if (response.data.success) {
             console.log(response.data)
             toast.success(response.data.message)
